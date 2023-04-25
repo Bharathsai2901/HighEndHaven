@@ -119,7 +119,6 @@ const updateUserProfile = async (req, res, next) => {
     const user = await User.findById(req.user._id).orFail();
     user.name = req.body.name || user.name;
     user.lastName = req.body.lastName || user.lastName;
-    user.email = req.body.email || user.email;
     user.phoneNumber = req.body.phoneNumber;
     user.address = req.body.address;
     user.country = req.body.country;
@@ -198,7 +197,8 @@ const writeReview = async (req, res, next) => {
             product.reviewsNumber = 1;
         } else {
             product.reviewsNumber = product.reviews.length;
-            product.rating = prc.map((item) => Number(item.rating)).reduce((sum, item) => sum + item, 0) / product.reviews.length;
+            let ratingCalc = prc.map((item) => Number(item.rating)).reduce((sum, item) => sum + item, 0) / product.reviews.length;
+            product.rating = Math.round(ratingCalc)
         }
         await product.save();
 
@@ -227,7 +227,7 @@ const updateUser = async (req, res, next) => {
         user.name = req.body.name || user.name;
         user.lastName = req.body.lastName || user.lastName;
         user.email = req.body.email || user.email;
-        user.isAdmin = req.body.isAdmin || user.isAdmin;
+        user.isAdmin = req.body.isAdmin
 
         await user.save();
 
